@@ -13,7 +13,6 @@ import NoteList from "@/components/NoteList/NoteList";
 import Modal from "@/components/Modal/Modal";
 import NoteForm from "@/components/NoteForm/NoteForm";
 import css from "./page.module.css";
-import { NoteTag } from "@/types/note";
 
 interface NotesClientProps {
   tag: string | undefined;

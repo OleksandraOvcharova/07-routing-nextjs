@@ -35,11 +35,12 @@ const NotePreview = () => {
       </Modal>
     );
 
-  if (error || !note) {
-    <Modal onClose={handleClose}>
-      <p>Something went wrong.</p>
-    </Modal>;
-  }
+  if (error || !note)
+    return (
+      <Modal onClose={handleClose}>
+        <p>Something went wrong.</p>
+      </Modal>
+    );
 
   return (
     <Modal onClose={handleClose}>
