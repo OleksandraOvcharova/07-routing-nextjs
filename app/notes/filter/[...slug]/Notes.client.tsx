@@ -26,7 +26,7 @@ function NotesClient({ tag }: NotesClientProps) {
   const [debouncedSearch] = useDebounce(search, 300);
 
   const { data, isLoading, isError, isSuccess } = useQuery({
-    queryKey: ["notes", debouncedSearch, page],
+    queryKey: ["notes", debouncedSearch, page, tag],
     queryFn: () => fetchNotes(debouncedSearch, page, tag),
     placeholderData: keepPreviousData,
     refetchOnMount: false,
