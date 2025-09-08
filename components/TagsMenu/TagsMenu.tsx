@@ -19,7 +19,7 @@ export default function TagsMenu() {
           {/* список тегів */}
           <li className={css.menuItem}>
             <Link
-              href={`/notes/filter/all`}
+              href={`/notes/filter/All`}
               onClick={toggle}
               className={css.menuLink}
             >
