@@ -1,63 +1,28 @@
-"use client";
-
-import { useQuery } from "@tanstack/react-query";
+import {
+  QueryClient,
+  HydrationBoundary,
+  dehydrate,
+} from "@tanstack/react-query";
 import { fetchNoteById } from "@/lib/api";
-import { useParams, useRouter } from "next/navigation";
-import Modal from "@/components/Modal/Modal";
-import css from "./NotePreview.module.css";
+import NotePreviewClient from "./NotePreview.client";
 
-const formatDate = (date: string | Date): string => {
-  return new Date(date).toLocaleDateString();
+type Props = {
+  params: Promise<{ id: string }>;
 };
 
-const NotePreview = () => {
-  const { id } = useParams<{ id: string }>();
-  const router = useRouter();
+const NotePreview = async ({ params }: Props) => {
+  const { id } = await params;
+  const queryClient = new QueryClient();
 
-  const {
-    data: note,
-    isLoading,
-    error,
-  } = useQuery({
+  await queryClient.prefetchQuery({
     queryKey: ["note", id],
     queryFn: () => fetchNoteById(id),
-    refetchOnMount: false,
   });
 
-  const handleClose = () => {
-    router.back();
-  };
-
-  if (isLoading)
-    return (
-      <Modal onClose={handleClose}>
-        <p>Loading, please wait...</p>
-      </Modal>
-    );
-
-  if (error || !note)
-    return (
-      <Modal onClose={handleClose}>
-        <p>Something went wrong.</p>
-      </Modal>
-    );
-
   return (
-    <Modal onClose={handleClose}>
-      <div className={css.container}>
-        <div className={css.item}>
-          <div className={css.header}>
-            <h2>{note.title}</h2>
-            <span className={css.tag}>{note.tag}</span>
-          </div>
-          <p className={css.content}>{note.content}</p>
-          <p className={css.date}>{formatDate(note.createdAt)}</p>
-        </div>
-      </div>
-      <button onClick={handleClose} className={css.backBtn}>
-        Go back
-      </button>
-    </Modal>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <NotePreviewClient />
+    </HydrationBoundary>
   );
 };
 
